@@ -1,3 +1,26 @@
+# Modifications
+- Modified configuration to read logs from files. 
+- Edited startup for use only that we need.
+- From Standalone to service.
+
+# New use example
+```sh
+# Note: Shipper name is not required because we are using
+# a global service. By default uses hostname.
+# Docker sock bind is not yet required. Use files instead.
+docker service create \
+--name filebeat \
+--network loggin \
+--mount type=bind,src=/var/lib/docker/volumes/,dst=/volumes \
+-e LOGSTASH_HOST=elk \
+-e LOGSTASH_PORT=5044 \
+-e PATH_LOGS=/volumes/*/*/*.log \
+--mode global \
+bargenson/filebeat
+}
+```
+
+
 # What is Filebeat?
 Filebeat is a lightweight, open source shipper for log file data. As the next-generation Logstash Forwarder, Filebeat tails logs and quickly sends this information to Logstash for further parsing and enrichment.
 
