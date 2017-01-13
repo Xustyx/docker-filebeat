@@ -66,6 +66,13 @@ print(container['Name'])
   else
     setConfiguration "SHIPPER_NAME" "`hostname`"
   fi
+  
+  if [ -n "${PATH_LOGS+1}" ]; then
+    setConfiguration "PATH_LOGS" "$SHIPPER_NAME"
+  else
+    echo "PATH_LOGS is needed"
+    exit 1
+  fi
 
   rm -rf "$CONTAINERS_FOLDER"
   rm -rf "$NAMED_PIPE"
@@ -73,17 +80,17 @@ print(container['Name'])
   mkfifo -m a=rw "$NAMED_PIPE"
 
   echo "Initializing Filebeat..."
-  cat $NAMED_PIPE | ${FILEBEAT_HOME}/filebeat -e -v &
+  cat $NAMED_PIPE | ${FILEBEAT_HOME}/filebeat -e -v
 
-  while true; do
-    CONTAINERS=`getRunningContainers`
-    for CONTAINER in $CONTAINERS; do
-      if ! ls $CONTAINERS_FOLDER | grep -q $CONTAINER; then
-        collectContainerLogs $CONTAINER &
-      fi
-    done
-    sleep 5
-  done
+ # while true; do
+ #   CONTAINERS=`getRunningContainers`
+ #   for CONTAINER in $CONTAINERS; do
+ #     if ! ls $CONTAINERS_FOLDER | grep -q $CONTAINER; then
+ #       collectContainerLogs $CONTAINER &
+ #     fi
+ #   done
+ #   sleep 5
+ # done
 
 else
   exec "$@"
