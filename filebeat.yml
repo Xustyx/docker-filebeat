@@ -30,7 +30,7 @@ filebeat:
       # * stdin: Reads the standard in
       input_type: log
       paths: 
-       - /volumes/*/*/*.log
+       - {{PATH_LOGS}}
 
       # Exclude lines. A list of regular expressions to match. It drops the lines that are
       # matching any regular expression from the list. The include_lines is called before
@@ -256,7 +256,7 @@ output:
   ### Logstash as output
   logstash:
     # The Logstash hosts
-    hosts: ["hc4t01210.itcs.hpecorp.net:5044"]
+    hosts: ["{{LOGSTASH_HOST}}:{{LOGSTASH_PORT}}"]
 
     # Number of workers per Logstash host.
     #worker: 1
@@ -326,7 +326,7 @@ shipper:
   # The name of the shipper that publishes the network data. It can be used to group
   # all the transactions sent by a single shipper in the web interface.
   # If this options is not defined, the hostname is used.
-  name: PRE
+  name: {{SHIPPER_NAME}}
 
   # The tags of the shipper are included in their own field with each
   # transaction published. Tags make it easy to group servers by different
